@@ -1,8 +1,6 @@
 import numpy as np
 import cv2
 
-from utils.conversions import rgb2lab
-
 
 def decompose(img: np.ndarray):
     # Input: Keeping L channel
@@ -12,7 +10,7 @@ def decompose(img: np.ndarray):
     return L, ab / 127
 
 
-def decompose_generator(X: np.ndarray, batch_size: int = 1, is_val=False):
+def decompose_generator(X: np.ndarray, batch_size: int = 1):
     """
     X: Set images, should be array of shape (n, w, h, 3)
     batch_size: Set batch size
@@ -24,12 +22,11 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, is_val=False):
     while True:
         L = X[i: i + batch_size][:, :, :, 0][:, :, :, None]
         ab = X[i: i + batch_size][:, :, :, 1:] / 127
-        i += batch_size
         yield L, ab
-        if i == end_index:
-            if is_val:
-                break
+        i += batch_size
+        if i >= end_index:
             i = 0
+            
 
 if __name__ == "__main__":
     from utils.conversions import bgr2lab
