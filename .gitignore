@@ -2,6 +2,10 @@
 *.zip
 *.jpg
 *.png
+*.7z
+
+# Event tensorflow files
+*.v2
 
 # Private keys
 privkey.pem
