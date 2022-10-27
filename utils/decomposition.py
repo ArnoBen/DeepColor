@@ -4,7 +4,7 @@ import cv2
 from utils.conversions import rgb2lab
 
 
-def decompose(img: np.nd_array):
+def decompose(img: np.ndarray):
     # Input: Keeping L channel
     L = img[:, :, 0]
     # Target: Keeping a and b channels
