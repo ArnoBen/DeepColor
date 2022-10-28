@@ -3,6 +3,7 @@ cd images/thumbnails_jpg
 # -m0=Copy is used to store files without compression
 
 # Storing all jpg files NOT starting with 5 or 6 for training
+
 7z a -m0=Copy ../thumbnails_jpg_train_00000.7z '-ir!0*.jpg'
 7z a -m0=Copy ../thumbnails_jpg_train_10000.7z '-ir!1*.jpg'
 7z a -m0=Copy ../thumbnails_jpg_train_20000.7z '-ir!2*.jpg'
