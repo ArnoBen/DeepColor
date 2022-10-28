@@ -10,7 +10,7 @@ def decompose(img: np.ndarray):
     return L, ab / 127
 
 
-def decompose_generator(X: np.ndarray, batch_size: int = 1):
+def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True):
     """
     X: Set images, should be array of shape (n, w, h, 3)
     batch_size: Set batch size
@@ -22,7 +22,10 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1):
     while True:
         L = X[i: i + batch_size][:, :, :, 0][:, :, :, None]
         ab = X[i: i + batch_size][:, :, :, 1:] / 127
-        yield L, ab
+        if flip_horizontal and np.random.randint(0, 2):  ## coinflip
+            yield L[:, ::-1, :], ab[:, ::-1, :]
+        else:
+            yield L, ab
         i += batch_size
         if i >= end_index:
             i = 0
