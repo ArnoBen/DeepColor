@@ -1,6 +1,7 @@
 import os
 import cv2
 from tqdm import tqdm
+import numpy as np
 
 
 def square_image_center(img):
@@ -29,4 +30,14 @@ def reduce_coco():
         except:
             print(f'{path} invalid')
         continue
-    
+
+
+def remove_bw(paths):
+  """Only keeps the non black & white pictures within a directory"""
+  colored_paths = []
+  for path in tqdm(paths):
+      img = cv2.imread(path)
+      r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
+      if not np.logical_and((r==g).all(), (g==b).all()):
+          colored_paths.append(path)
+  return colored_paths
