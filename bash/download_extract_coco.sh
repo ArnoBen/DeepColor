@@ -9,7 +9,13 @@ n_files = ${#filenames[@]}
 for i in {1..30}
 do
     splice=$((i*1000))
-    7z e test2017.zip -oimages/train/$splice ${filenames[*]:splice-1000:splice}
+    subdir=$splice
+    if ((i < 10))
+    then
+      subdir="0${splice}"
+    fi
+    echo $subdir
+    7z e test2017.zip -oimages/train/$subdir ${filenames[*]:splice-1000:splice}
 done
 
 7z e test2017.zip -oimages/valid/ ${filenames[*]:30000:35000}
