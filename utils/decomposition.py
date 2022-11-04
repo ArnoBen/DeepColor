@@ -4,17 +4,18 @@ import cv2
 
 def decompose(img: np.ndarray):
     # Input: Keeping L channel
-    L = img[:, :, 0][..., np.newaxis] / 100
+    L = img[:, :, 0] / 100
     # Target: Keeping a and b channels
     ab = img[:, :, 1:] / 127
     return L, ab
 
+
 def recompose(L: np.ndarray, ab: np.ndarray):
     assert L.shape[:2] == ab.shape[:2]
-    image = np.zeros((L.shape[0], L.shape[1], 3), dtype=np.uint8)
+    image = np.zeros((L.shape[0], L.shape[1], 3))
     image[:, :, 0] = L * 100
     image[:, :, 1:] = ab * 127
-    return image
+    return np.round(image).astype(int)
 
 
 def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True):
@@ -27,10 +28,10 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True
     n = len(X)
     end_index = n - n % batch_size
     while True:
-        L = X[i: i + batch_size][..., 0][..., np.newaxis] / 100
+        L = X[i: i + batch_size][..., 0] / 100
         ab = X[i: i + batch_size][..., 1:] / 127
         if flip_horizontal and np.random.randint(0, 2):  ## coinflip
-            yield L[:, ::-1, :], ab[:, ::-1, :]
+            yield L[:, ::-1], ab[:, ::-1, :]
         else:
             yield L, ab
         i += batch_size
@@ -39,20 +40,19 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True
             
 
 if __name__ == "__main__":
-    from utils.conversions import bgr2lab
+    from conversions import bgr2lab
     # Cheking if decomposition works well
-    sample = bgr2lab(cv2.imread('images/00506.jpg'))
+    sample = bgr2lab(cv2.imread('lena-256.jpg'))
 
     L_input, ab_true = decompose(sample)
-    recomposed = np.zeros(sample.shape)
-    recomposed[:, :, 0] = L_input
-    recomposed[:, :, 1:] = ab_true * 127
+    recomposed = recompose(L_input, ab_true)
 
     # fig, axes = plt.subplots(1, 2)
     # axes[0].set_title('recomposed')
     # axes[0].imshow(lab2rgb(recomposed))
     # axes[1].set_title('original')
     # axes[1].imshow(lab2rgb(sample))
+    print(np.sum(sample-recomposed))
     assert np.all(recomposed == sample)
     print("The decomposition - recomposition is working")
 
