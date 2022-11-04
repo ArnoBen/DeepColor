@@ -4,7 +4,9 @@ import cv2
 
 def decompose(img: np.ndarray):
     # Input: Keeping L channel
-    L = img[:, :, 0] / 100
+    # Keeping the shape as (h, w, 1) because it's consistent with ab (h, w, 2)
+    # and is expected as input in the GAN's generator
+    L = img[:, :, 0][..., np.newaxis] / 100
     # Target: Keeping a and b channels
     ab = img[:, :, 1:] / 127
     return L, ab
@@ -13,7 +15,7 @@ def decompose(img: np.ndarray):
 def recompose(L: np.ndarray, ab: np.ndarray):
     assert L.shape[:2] == ab.shape[:2]
     image = np.zeros((L.shape[0], L.shape[1], 3))
-    image[:, :, 0] = L * 100
+    image[:, :, 0] = L[..., 0] * 100
     image[:, :, 1:] = ab * 127
     return np.round(image).astype(int)
 
@@ -31,7 +33,7 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True
         L = X[i: i + batch_size][..., 0] / 100
         ab = X[i: i + batch_size][..., 1:] / 127
         if flip_horizontal and np.random.randint(0, 2):  ## coinflip
-            yield L[:, ::-1], ab[:, ::-1, :]
+            yield L[:, ::-1, :], ab[:, ::-1, :]
         else:
             yield L, ab
         i += batch_size
@@ -47,37 +49,5 @@ if __name__ == "__main__":
     L_input, ab_true = decompose(sample)
     recomposed = recompose(L_input, ab_true)
 
-    # fig, axes = plt.subplots(1, 2)
-    # axes[0].set_title('recomposed')
-    # axes[0].imshow(lab2rgb(recomposed))
-    # axes[1].set_title('original')
-    # axes[1].imshow(lab2rgb(sample))
-    print(np.sum(sample-recomposed))
     assert np.all(recomposed == sample)
     print("The decomposition - recomposition is working")
-
-
-# # Image transformer
-# datagen = ImageDataGenerator(
-#         shear_range=0.2,
-#         zoom_range=0.2,
-#         # rotation_range=20,
-#         horizontal_flip=True)
-
-# # Generate training data
-# def image_gen(X, batch_size):
-#     for batch in datagen.flow(X, batch_size=batch_size):
-#         lab_batch = [cv2.cvtColor(img, cv2.COLOR_BGR2Lab) for img in batch]
-#         lab_batch = np.array(lab_batch)
-#         # Input: Keeping L channel
-#         X_batch = lab_batch[:, :, :, 0][:, :, :, np.newaxis]  
-#         # Target: Keeping a and b channels
-#         Y_batch = lab_batch[:, :, :, 1:]
-#         yield X_batch, Y_batch / 128
-
-# # Display some examples of transformation
-# fix, axes = plt.subplots(2, 4, figsize=(14, 6))
-# for i in range(8):
-#     image = cv2.cvtColor(next(datagen.flow(X, batch_size=1))[0].astype(np.uint8), cv2.COLOR_Lab2RGB)
-#     axes.flat[i].imshow(image)
-# plt.show()
