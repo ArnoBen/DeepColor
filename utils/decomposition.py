@@ -27,8 +27,8 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True
     n = len(X)
     end_index = n - n % batch_size
     while True:
-        L = X[i: i + batch_size][:, :, :, 0][:, :, :, None]
-        ab = X[i: i + batch_size][:, :, :, 1:] / 127
+        L = X[i: i + batch_size][..., 0][..., np.newaxis] / 100
+        ab = X[i: i + batch_size][..., 1:] / 127
         if flip_horizontal and np.random.randint(0, 2):  ## coinflip
             yield L[:, ::-1, :], ab[:, ::-1, :]
         else:
