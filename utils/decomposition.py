@@ -3,6 +3,11 @@ import cv2
 
 
 def decompose(img: np.ndarray):
+    """
+    Separates the Lab channel ranges and normalizes the ranges:
+    L: 0, 100 => 0 - 1
+    ab: -127, 127 => -1, 1
+    """
     # Input: Keeping L channel
     # Keeping the shape as (h, w, 1) because it's consistent with ab (h, w, 2)
     # and is expected as input in the GAN's generator
@@ -13,7 +18,12 @@ def decompose(img: np.ndarray):
 
 
 def recompose(L: np.ndarray, ab: np.ndarray):
-    assert L.shape[:2] == ab.shape[:2]
+    """
+    Concatenates the L and ab channel ranges and rescales the value ranges:
+    L: 0 - 1  => 0, 100
+    ab: -1, 1  => -127, 127
+    """
+    assert L.shape[:2] == ab.shape[:2], f"Different shapes: {L.shape[:2]}, {ab.shape[:2]}"
     image = np.zeros((L.shape[0], L.shape[1], 3))
     image[:, :, 0] = L[..., 0] * 100
     image[:, :, 1:] = ab * 127
@@ -39,7 +49,7 @@ def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True
         i += batch_size
         if i >= end_index:
             i = 0
-            
+
 
 if __name__ == "__main__":
     from conversions import bgr2lab
