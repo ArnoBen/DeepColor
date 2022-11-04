@@ -22,3 +22,9 @@ def lab2rgb(img):
 
 def bgr2lab(img):
     return rgb2lab(bgr2rgb(img))
+
+
+def denormalize_lab(img):
+    img[:, :, 0] *= 100
+    img[:, :, 1:] *= 127
+    return img
