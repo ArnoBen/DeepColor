@@ -4,15 +4,22 @@ import cv2
 
 def decompose(img: np.ndarray):
     # Input: Keeping L channel
-    L = img[:, :, 0]
+    L = img[:, :, 0][..., np.newaxis] / 100
     # Target: Keeping a and b channels
-    ab = img[:, :, 1:]
-    return L, ab / 127
+    ab = img[:, :, 1:] / 127
+    return L, ab
+
+def recompose(L: np.ndarray, ab: np.ndarray):
+    assert L.shape[:2] == ab.shape[:2]
+    image = np.zeros((L.shape[0], L.shape[1], 3), dtype=np.uint8)
+    image[:, :, 0] = L * 100
+    image[:, :, 1:] = ab * 127
+    return image
 
 
 def decompose_generator(X: np.ndarray, batch_size: int = 1, flip_horizontal=True):
     """
-    X: Set images, should be array of shape (n, w, h, 3)
+    X: Set images, should be array of shape (n, h, w, 3)
     batch_size: Set batch size
     is_val: Is this a validation set ? Necessary to stop the iterator for validation sets.
     """
