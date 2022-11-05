@@ -12,8 +12,8 @@ do
     subdir=$splice
     if ((i < 10)); then subdir="0${splice}"; fi
     
-    if ((i < 30)); then set="train"
-    elif ((i < 35)); then set="valid"
+    if ((i < 31)); then set="train"
+    elif ((i < 36)); then set="valid"
     else set="test"
     fi
 
