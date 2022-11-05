@@ -1,3 +1,5 @@
+sudo apt-get install imagemagick -y
+
 COCO_DATASET=test2017
 
 # Downloading the coco dataset
