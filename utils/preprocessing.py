@@ -12,24 +12,24 @@ def square_image_center(img):
     return img[h_border:h - h_border, w_border:w - w_border, :]
 
 
-def downscale(img):
-    return cv2.resize(img, (128, 128), interpolation=cv2.INTER_AREA)
+def downscale(img, size=128):
+    return cv2.resize(img, (size, size), interpolation=cv2.INTER_AREA)
 
 
-def reduce_coco():
-    paths = [path for path in os.listdir('coco/') if path.endswith(".jpg")]
-    i = 0
-    for path in tqdm(paths):
-        img = cv2.imread('coco/' + path)
-        try:
-            img.shape
-            img_num = f"{i}".zfill(5)
-            write_path = f"images/images_{img_num}.jpg"
-            cv2.imwrite(write_path, downscale(square_image_center(img)))
-            i += 1
-        except:
-            print(f'{path} invalid')
-        continue
+# def reduce_coco(size=128):
+#     paths = [path for path in os.listdir('coco/') if path.endswith(".jpg")]
+#     i = 0
+#     for path in tqdm(paths):
+#         img = cv2.imread('coco/' + path)
+#         try:
+#             img.shape
+#             img_num = f"{i}".zfill(5)
+#             write_path = f"images/images_{img_num}.jpg"
+#             cv2.imwrite(write_path, downscale(img, size))
+#             i += 1
+#         except:
+#             print(f'{path} invalid')
+#         continue
 
 
 def remove_bw(paths):
