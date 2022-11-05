@@ -1,7 +1,10 @@
 COCO_DATASET=test2017
 
 # Downloading the coco dataset
-wget http://images.cocodataset.org/zips/$COCO_DATASET.zip
+if ! test -f "test2017.zip"
+then
+    wget http://images.cocodataset.org/zips/$COCO_DATASET.zip
+fi
 
 # Extracting files into subdirectories
 filenames=($(7z l test2017.zip|grep .jpg|awk -F' ' '{print $6}'))
