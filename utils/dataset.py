@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from conversions import bgr2lab
+from .conversions import bgr2lab
 from tqdm import tqdm
 from multiprocessing import Pool
 import cv2
