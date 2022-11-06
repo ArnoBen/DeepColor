@@ -1,48 +1,73 @@
 import os
 from glob import glob
-from utils.preprocessing import remove_bw
-from utils.conversions import bgr2lab
+from conversions import bgr2lab
 from tqdm import tqdm
+from multiprocessing import Pool
 import cv2
 import numpy as np
 
 
+def _load_and_convert(path):
+    img = cv2.imread(path)
+    return bgr2lab(img)
+
+
+def _keep_if_colored(path):
+    img = cv2.imread(path)
+    r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
+    if not np.logical_and((r==g).all(), (g==b).all()):
+        return path
+    else:
+        return None
+
+
+def _remove_bw(paths):
+    """Only keeps the non black & white pictures within a directory"""
+    colored_paths = []
+
+    with Pool() as p:
+        colored_paths = list(tqdm(p.imap(_keep_if_colored, paths), total=len(paths)))
+
+    colored_paths = [path for path in colored_paths if path is not None ]
+
+    return colored_paths
+
+
 def make_dataset(train_size=40000, val_size=1000, test_size=1000):
-    filepaths, set_name2size = get_image_paths()
-    desired_sizes = (train_size, val_size, test_size)
-    # Getting the min value between the user's desired size and the max set size for each set
-    sets_sizes = [(min(size, desired_size)) for size, desired_size in zip(set_name2size.values(), desired_sizes)]
+    filepaths, set_name2size = get_image_paths(train_size, val_size, test_size)
     print("Loading data in dictionary and converting to Lab colorspace.")
     X = {}
-    h, w, c = cv2.imread(filepaths['train'][0]).shape  # Assuming all images have same shape
-    for set_name, set_size in zip(set_name2size.keys(), sets_sizes):
-        X[set_name] = np.zeros((set_size, h, w, 3), dtype=np.int8)
-        for i, path in tqdm(enumerate(filepaths[set_name]), total=set_size):
-            if i == set_size:
-                break
-            img = cv2.imread(path)
-            # Checking if the image is not black and white (many b/w images in coco) and adds it
-            X[set_name][i] = bgr2lab(img)
+    for set_name in filepaths:
+        with Pool() as p:
+            paths = filepaths[set_name]
+            X[set_name] = np.array(list(tqdm(
+                p.imap(_load_and_convert, paths),
+                total=len(paths))))
     print("Done.")
     return X
 
 
-def get_image_paths():
+def get_image_paths(train_size=40000, val_size=1000, test_size=1000):
     print("Getting all images paths and removing greyscale images")
-    sets = ('train', 'valid', 'test')
+    sets = {'train': train_size, 'valid': val_size, 'test': test_size}
     filepaths = {}
-    for set_ in sets:
-        dirpath = 'images/' + set_
-        filepaths_all = sorted(
+    for set_name, set_size in sets.items():
+        dirpath = 'images/' + set_name
+        filepaths_set_all = sorted(
             [y for x in os.walk(dirpath) 
                for y in (glob(os.path.join(x[0], '*.jpg')) + 
                          glob(os.path.join(x[0], '*.png')))])
-        filepaths[set_] = remove_bw(filepaths_all)
+        filepaths[set_name] = _remove_bw(filepaths_set_all[:set_size])
     
     set_name2size = {name: len(filepaths[name]) for name in sets}
+    print("Greyscale images may have been removed, hence the possibly smaller final size")
     print('\n', set_name2size)
 
-    for set_ in sets:
-        assert not [filepath for filepath in filepaths[set_] if not filepath.endswith('.jpg')], f"Non image file exists in {set_}"
+    for set_name in sets.keys():
+        assert not [filepath for filepath in filepaths[set_name] if not filepath.endswith('.jpg')], f"Non image file exists in {set_name}"
     
     return filepaths, set_name2size
+
+
+if __name__ == "__main__":
+    make_dataset(10000, 1000, 1000)

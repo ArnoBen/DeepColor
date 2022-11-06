@@ -31,24 +31,3 @@ def downscale(img, size=128):
 #         except:
 #             print(f'{path} invalid')
 #         continue
-
-
-def _keep_if_colored(path):
-        img = cv2.imread(path)
-        r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
-        if not np.logical_and((r==g).all(), (g==b).all()):
-            return path
-        else:
-            return None
-
-
-def remove_bw(paths):
-    """Only keeps the non black & white pictures within a directory"""
-    colored_paths = []
-
-    with Pool(8) as p:
-        colored_paths = list(tqdm(p.imap(_keep_if_colored, paths), total=len(paths)))
-
-    colored_paths = [path for path in colored_paths if path is not None ]
-
-    return colored_paths
