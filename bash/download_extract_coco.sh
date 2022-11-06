@@ -1,4 +1,4 @@
-sudo apt-get install imagemagick -y
+sudo apt-get install imagemagick -y > > /dev/null
 
 COCO_DATASET=test2017
 
