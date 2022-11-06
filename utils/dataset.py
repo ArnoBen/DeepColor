@@ -1,6 +1,6 @@
 import os
 from glob import glob
-from .conversions import bgr2lab
+from utils.conversions import bgr2lab
 from tqdm import tqdm
 from multiprocessing import Pool
 import cv2
@@ -34,7 +34,7 @@ def _remove_bw(paths):
 
 
 def make_dataset(train_size=40000, val_size=1000, test_size=1000):
-    filepaths, set_name2size = get_image_paths(train_size, val_size, test_size)
+    filepaths = get_image_paths(train_size, val_size, test_size)
     print("Loading data in dictionary and converting to Lab colorspace.")
     X = {}
     for set_name in filepaths:
@@ -66,8 +66,8 @@ def get_image_paths(train_size=40000, val_size=1000, test_size=1000):
     for set_name in sets.keys():
         assert not [filepath for filepath in filepaths[set_name] if not filepath.endswith('.jpg')], f"Non image file exists in {set_name}"
     
-    return filepaths, set_name2size
+    return filepaths
 
 
 if __name__ == "__main__":
-    make_dataset(10000, 1000, 1000)
+    make_dataset(1000, 1000, 1000)
