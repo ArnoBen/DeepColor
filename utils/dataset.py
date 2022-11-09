@@ -69,7 +69,8 @@ def get_image_paths(train_size=40000, val_size=1000, test_size=1000):
     print('\n', set_name2size)
 
     for set_name in sets.keys():
-        assert not [filepath for filepath in filepaths[set_name] if not filepath.endswith('.jpg')], f"Non image file exists in {set_name}"
+        for filepath in filepaths[set_name]:
+            assert (filepath.endswith('jpg') or filepath.endswith('png')), f"Non image file exists in {set_name}"
     
     return filepaths
 
