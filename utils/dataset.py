@@ -9,13 +9,18 @@ import numpy as np
 
 def _load_and_convert(path):
     img = cv2.imread(path)
-    return bgr2lab(img)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2LAB)
+    return img
+
+
+def is_grayscale(path):
+    img = cv2.imread(path)
+    b, g, r = img[:, :, 0], img[:, :, 1], img[:, :, 2]
+    return np.logical_and((r==g).all(), (g==b).all())
 
 
 def _keep_if_colored(path):
-    img = cv2.imread(path)
-    r, g, b = img[:, :, 0], img[:, :, 1], img[:, :, 2]
-    if not np.logical_and((r==g).all(), (g==b).all()):
+    if not is_grayscale(path):
         return path
     else:
         return None
