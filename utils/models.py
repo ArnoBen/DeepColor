@@ -69,6 +69,6 @@ def get_full_model():
     decoder_output = UpSampling2D((2, 2))(decoder_output)
     decoder_output = Conv2D(32, (3,3), activation='relu', padding='same')(decoder_output)
     decoder_output = Conv2D(16, (3,3), activation='relu', padding='same')(decoder_output)
-    decoder_output = Conv2D(2, (3, 3), activation='tanh', padding='same')(decoder_output)
+    decoder_output = Conv2D(2, (3, 3), activation='sigmoid', padding='same')(decoder_output)
     decoder_output = UpSampling2D((2, 2))(decoder_output)
     return Model(inputs=[encoder_input, embed_input], outputs=decoder_output)
