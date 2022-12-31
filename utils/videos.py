@@ -19,11 +19,18 @@ def extract_frames(path, output_dir):
     print(f"Extracted {count} frames.")
 
 
-def create_video_from_frames(frames_dir, output_dir, frameSize=(854, 480)):
+def create_video_from_frame_files(frames_dir, output_dir, frameSize=(854, 480)):
     write_path = os.path.join(output_dir, "output_video.avi")
     out = cv2.VideoWriter(write_path, cv2.VideoWriter_fourcc(*'DIVX'), 25, frameSize)
     for filename in tqdm(sorted(glob(f"{frames_dir}*.jpg"))):
         img = cv2.imread(filename)
         out.write(img)
     out.release()
-    
+
+
+def create_video_from_frame_array(frames, output_dir, frameSize=(854, 480)):
+    write_path = os.path.join(output_dir, "output_video.avi")
+    out = cv2.VideoWriter(write_path, cv2.VideoWriter_fourcc(*'DIVX'), 25, frameSize)
+    for frame in tqdm(frames):
+        out.write(frame)
+    out.release()
