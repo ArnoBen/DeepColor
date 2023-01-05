@@ -19,20 +19,24 @@ Project for colorizing grayscale pictures and comparing 3 different neural netwo
 
 ## Some results
 ### Colorizing pictures
-![Colorized pictures](assets/result.png)
+
+<img src="./assets/result.png" alt="pictures" width="500"/>
 
 ### Colorizing video
-[![Colorized Video](assets/thumbnail.png)](https://youtu.be/ibwZja2HmoQ?t=12)
+
+[<img src="assets/thumbnail.png" alt="video" width="500"/>](https://youtu.be/ibwZja2HmoQ?t=12)
 
 ## Architectures diagrams
-
 ### Deep Koalarization
-![Deep Koalarization Diagram](assets/koalarization.png)
+
+<img src="./assets/koalarization.png" alt="pictures" width="500"/>
 
 ### Unet
-![Unet Diagram](assets/unet.png)
+
+<img src="./assets/unet.png" alt="pictures" width="500"/>
 
 ### Pix2Pix
-![Unet Diagram](assets/pix2pix.png)
+
+<img src="./assets/pix2pix.png" alt="pictures" width="500"/>
 
 ## How to use
