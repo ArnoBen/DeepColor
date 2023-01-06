@@ -1,5 +1,6 @@
 from typing import Tuple
 import tensorflow as tf
+from tensorflow.keras.applications import InceptionResNetV2
 from tensorflow.keras.applications import ResNet50
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.models import Model
@@ -9,16 +10,16 @@ from tensorflow.keras.layers import Input, Conv2D, Conv2DTranspose, MaxPool2D,\
                                     Dropout, Concatenate, Lambda, Reshape
 
 
-class Unet():
+class Unet:
     def __init__(self, input_shape: Tuple = (256, 256, 1)) -> None:
         tf.keras.backend.clear_session()
         self.model = self.define_unet(input_shape)
 
-    def __call__(self, input):        
-        return self.model(input)
+    def __call__(self, x: tf.Tensor):
+        return self.model(x)
 
-    def conv_block(self, input, num_filters):
-        x = Conv2D(num_filters, 3, padding="same")(input)
+    def conv_block(self, x: tf.Tensor, num_filters):
+        x = Conv2D(num_filters, 3, padding="same")(x)
         x = BatchNormalization()(x)
         x = Activation("relu")(x)
 
@@ -28,13 +29,13 @@ class Unet():
 
         return x
 
-    def decoder_block(self, input, skip_features, num_filters):
-        x = Conv2DTranspose(num_filters, (2, 2), strides=2, padding="same")(input)
+    def decoder_block(self, x: tf.Tensor, skip_features: tf.Tensor, num_filters):
+        x = Conv2DTranspose(num_filters, (2, 2), strides=2, padding="same")(x)
         x = Concatenate()([x, skip_features])
         x = self.conv_block(x, num_filters)
         return x
 
-    def define_unet(self, input_shape):
+    def define_unet(self, input_shape: Tuple):
         """This is a resnet50_unet"""
 
         """ Input """
@@ -66,8 +67,6 @@ class Unet():
         model = Model(inputs, outputs, name="ResNet50_U-Net")
         return model
 
-    # model.summary()
-
 
 if __name__ == "__main__":
-    Unet()
+    Unet().model.summary()
