@@ -1,6 +1,7 @@
 # DeepColor
 
 ### [GitHub link](https://github.com/ArnoBen/DeepColor)
+### [Medium article](https://medium.com/@arno.benizri/colorizing-black-white-pictures-with-neural-networks-an-odyssey-8ff54e8c5bd3)
 
 Project for colorizing grayscale pictures and comparing 3 different neural networks:
 - [Deep Koalarization](https://arxiv.org/abs/1712.03400): Encoder-Decoder + Inception Resnet fusion classifier 
