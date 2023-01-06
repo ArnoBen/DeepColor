@@ -48,9 +48,9 @@ optional arguments:
   -h, --help            show this help message and exit
   -d, --debug           set log level to debug
   -t TRAIN, --train TRAIN
-                        train a model
-  -m MODEL, --model MODEL
-                        choose the model to train between 'fusion', 'unet',
-                        'gan'
+                        Train a model. Choose between 'fusion', 'unet', 'gan'.
   -c COLORIZE, --colorize COLORIZE
+                        Colorize a picture at the given path
+  -v VIDEO, --video VIDEO
+                        Colorize a video at the given path
 ```
