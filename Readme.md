@@ -40,3 +40,16 @@ Project for colorizing grayscale pictures and comparing 3 different neural netwo
 <img src="./assets/pix2pix.png" alt="pictures" width="500"/>
 
 ## How to use
+```
+usage: main.py [-h] [-d] [-t TRAIN] [-m MODEL] [-c COLORIZE] [-v VIDEO]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --debug           set log level to debug
+  -t TRAIN, --train TRAIN
+                        train a model
+  -m MODEL, --model MODEL
+                        choose the model to train between 'fusion', 'unet',
+                        'gan'
+  -c COLORIZE, --colorize COLORIZE
+```
