@@ -18,6 +18,21 @@ Project for colorizing grayscale pictures and comparing 3 different neural netwo
 - tensorflow (2.8.2)
 - tqdm (4.64.1)
 
+## How to use
+```
+usage: main.py [-h] [-d] [-t TRAIN] [-m MODEL] [-c COLORIZE] [-v VIDEO]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -d, --debug           set log level to debug
+  -t TRAIN, --train TRAIN
+                        Train a model. Choose between 'fusion', 'unet', 'gan'.
+  -c COLORIZE, --colorize COLORIZE
+                        Colorize a picture at the given path
+  -v VIDEO, --video VIDEO
+                        Colorize a video at the given path
+```
+
 ## Some results
 ### Colorizing pictures
 
@@ -39,18 +54,3 @@ Project for colorizing grayscale pictures and comparing 3 different neural netwo
 ### Pix2Pix
 
 <img src="./assets/pix2pix.png" alt="pictures" width="500"/>
-
-## How to use
-```
-usage: main.py [-h] [-d] [-t TRAIN] [-m MODEL] [-c COLORIZE] [-v VIDEO]
-
-optional arguments:
-  -h, --help            show this help message and exit
-  -d, --debug           set log level to debug
-  -t TRAIN, --train TRAIN
-                        Train a model. Choose between 'fusion', 'unet', 'gan'.
-  -c COLORIZE, --colorize COLORIZE
-                        Colorize a picture at the given path
-  -v VIDEO, --video VIDEO
-                        Colorize a video at the given path
-```
